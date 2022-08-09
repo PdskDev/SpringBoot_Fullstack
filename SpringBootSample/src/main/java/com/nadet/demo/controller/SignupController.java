@@ -3,6 +3,7 @@ package com.nadet.demo.controller;
 import java.util.Locale;
 import java.util.Map;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.nadet.demo.application.service.UserApplicationService;
+import com.nadet.demo.domain.user.model.MUser;
+import com.nadet.demo.domain.user.service.UserService;
 import com.nadet.demo.form.GroupOrder;
 import com.nadet.demo.form.SignupForm;
 
@@ -26,6 +29,12 @@ public class SignupController {
 	
 	@Autowired
 	private UserApplicationService userApplicationService;
+	
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
+	private ModelMapper modelMapper;
 	
 	/** Display the user signup screen */
 	@GetMapping("/signup")
@@ -50,6 +59,12 @@ public class SignupController {
 		}
 		
 		log.info(form.toString());
+		
+		//Convert from to MUser class
+		MUser user = modelMapper.map(form, MUser.class);
+		
+		//User signup
+		userService.signup(user);
 		
 		//Redirect to login screen
 		return "redirect:/login";
