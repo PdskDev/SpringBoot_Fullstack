@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.nadet.demo.application.service.UserApplicationService;
+import com.nadet.demo.form.GroupOrder;
 import com.nadet.demo.form.SignupForm;
 
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +41,8 @@ public class SignupController {
 	/** User signup process */
 	@PostMapping("/signup")
 	public String postSignup(Model model, Locale locale, 
-			@ModelAttribute @Validated SignupForm form, BindingResult bindingResult) {
+			@ModelAttribute @Validated (GroupOrder.class) SignupForm form, 
+			BindingResult bindingResult) {
 		
 		//Input check result
 		if(bindingResult.hasErrors()) {

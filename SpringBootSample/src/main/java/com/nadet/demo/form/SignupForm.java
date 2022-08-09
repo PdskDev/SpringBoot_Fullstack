@@ -43,6 +43,6 @@ public class SignupForm {
 	@Max(value = 100, groups = ValidGroup2.class)
 	private Integer age;
 	
-	@NotNull
+	@NotNull(groups = ValidGroup1.class)
 	private Integer gender;
 }
