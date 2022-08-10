@@ -3,6 +3,7 @@ package com.nadet.demo.repository;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.nadet.demo.domain.user.model.MUser;
 
@@ -14,5 +15,17 @@ public interface UserMapper {
 	
 	/** Get User **/
 	public List<MUser> findMany();
-
+	
+	/** Get one user**/
+	public MUser findOne(String userId);
+	
+	/** Update User **/
+	public void updateOne(
+			@Param("userId") String userId, 
+			@Param("password") String password,
+			@Param("userName") String userName
+			);
+	
+    /** Delete user **/
+	public int deleteOne(@Param("userId") String userId);
 }

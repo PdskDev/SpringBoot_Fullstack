@@ -3,6 +3,18 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- Mapper and xml mapping -->
 <mapper namespace="com.nadet.demo.repository.UserMapper">
+	<!-- Mapping definition -->
+	<resultMap type="com.nadet.demo.domain.user.model.MUser"
+		id="user">
+		<id column="user_id" property="userId" />
+		<id column="password" property="password" />
+		<id column="user_name" property="userName" />
+		<id column="birthday" property="birthday" />
+		<id column="age" property="age" />
+		<id column="gender" property="gender" />
+		<id column="department_id" property="departmentId" />
+		<id column="role" property="role" />
+	</resultMap>
 	<!-- user registration -->
 	<insert id="insertOne">
 		insert into m_user(
@@ -31,4 +43,17 @@
 	<select id="findMany" resultType="MUser">
 		select * from m_user
 	</select>
+	<!-- Get user (1 record) -->
+	<select id="findOne" resultMap="user">
+		select * from m_user where user_id = #{userId}
+	</select>
+	<!-- Update user -->
+	<update id="updateOne">
+		update m_user set password = #{password}, user_name = #{userName}
+		where user_id = #{userId}
+	</update>
+	<!-- Delete user -->
+	<delete id="deleteOne">
+		delete from m_user where user_id = #{userId}
+	</delete>
 </mapper>
