@@ -24,9 +24,9 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	/** Get user **/
-	public List<MUser> getUsers() {
+	public List<MUser> getUsers(MUser user) {
 		
-		return mapper.findMany();
+		return mapper.findMany(user);
 	}
 	
 	/** Get user (1 record) **/

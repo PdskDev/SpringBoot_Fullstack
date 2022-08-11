@@ -39,9 +39,17 @@
 		)
 	</insert>
 
-	<!-- Get user (multiple -->
+	<!-- Get user (multiple) -->
 	<select id="findMany" resultType="MUser">
 		select * from m_user
+		<where>
+		<if test="userId != null">
+		user_id like '%' || #{userId} || '%'
+		</if>
+		<if test="userName != null">
+		and user_name like '%' || #{userName} || '%'
+		</if>
+		</where>
 	</select>
 	<!-- Get user (1 record) -->
 	<select id="findOne" resultMap="user">
