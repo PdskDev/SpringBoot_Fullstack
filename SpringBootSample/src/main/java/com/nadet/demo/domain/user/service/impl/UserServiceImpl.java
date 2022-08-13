@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nadet.demo.domain.user.model.MUser;
 import com.nadet.demo.domain.user.service.UserService;
@@ -37,6 +38,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	/** Update user **/
+	@Transactional
 	@Override
 	public void updateUserOne(String userId, String password, String userName) {
 		 mapper.updateOne(userId, password, userName);

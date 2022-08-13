@@ -13,8 +13,11 @@ import com.nadet.demo.domain.user.model.MUser;
 import com.nadet.demo.domain.user.service.UserService;
 import com.nadet.demo.form.UserDetailForm;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Controller
 @RequestMapping("/user")
+@Slf4j
 public class UserDetailsController {
 	
 	@Autowired
@@ -31,8 +34,9 @@ public class UserDetailsController {
 		MUser user = userService.getUserOne(userId);
 		user.setPassword(null);
 		
-		//Get user
+		//Get MUser to form
 		form = modelMapper.map(user, UserDetailForm.class);
+		form.setSalaryList(user.getSalaryList());
 		
 		//Registred in Model
 		model.addAttribute("userDetailForm", form);
@@ -45,13 +49,19 @@ public class UserDetailsController {
 	@PostMapping(value="/detail", params = "update")
 	public String updateUser(UserDetailForm form, Model model) {
 		
-		//Update user
-		userService.updateUserOne(
-				form.getUserId(), 
-				form.getPassword(), 
-				form.getUserName()
-				);
+		try {
+			//Update user
+			userService.updateUserOne(
+					form.getUserId(), 
+					form.getPassword(), 
+					form.getUserName()
+					);
+			
+		} catch (Exception e) {
+			log.error("Error in user update", e);
+		}
 		
+		//Redirect to user list screen
 		return "redirect:/user/list";
 	}
 	
