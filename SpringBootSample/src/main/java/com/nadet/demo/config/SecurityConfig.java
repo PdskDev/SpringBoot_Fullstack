@@ -1,5 +1,6 @@
 package com.nadet.demo.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -7,19 +8,24 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @SuppressWarnings("deprecation")
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
-	/** Encrypt password*/
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+	@Autowired
+	private UserDetailsService userDetailsService;
+
+    /** Encrypt password*/
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 	
 	/** Set a target out-of-security */
 	@Override
@@ -53,8 +59,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		      .passwordParameter("password") // Login page password
 		      .defaultSuccessUrl("/user/list", true); // Transition destination after login success
 		
+		//Logout process
+		http
+		  .logout()
+		     .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+		     .logoutUrl("/logout")
+		     .logoutSuccessUrl("/login?logout");
+		
 		//Disable CSRF measures (temporary)
-		http.csrf().disable();
+		//http.csrf().disable();
 	}
 	
 	/** Authentication settings */
@@ -65,15 +78,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		PasswordEncoder encoder = passwordEncoder();
 		
 		//In-memory authentication
+		/*
+		 * auth .inMemoryAuthentication() .withUser("user") // add user
+		 * .password(encoder.encode("user")) .roles("GENERAL") .and() .withUser("admin")
+		 * // add admin .password(encoder.encode("admin")) .roles("ADMIN");
+		 */
+		//User data authentication
 		auth
-		   .inMemoryAuthentication()
-		      .withUser("user") // add user
-		         .password(encoder.encode("user"))
-		         .roles("GENERAL")
-		      .and()
-		      .withUser("admin") // add admin
-		         .password(encoder.encode("admin"))
-		         .roles("ADMIN");
+		  .userDetailsService(userDetailsService)
+		  .passwordEncoder(encoder);
 		
 	}
 		
