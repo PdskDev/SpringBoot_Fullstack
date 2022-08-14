@@ -9,7 +9,7 @@
 	<div layout:fragment="menu" class="bg-light">
 		<ul class="nav nav-pills nav-stacked flex-column">
 			<li role="presentation"><a class="nav-link"
-				th:href="@{'/user/list'}"> User list </a></li>
+				th:href="@{'/user/list'}"> User list</a></li>
 			<li role="presentation" sec:authorize="hasRole('ADMIN')">
 			<a class="nav-link"
 				th:href="@{'/admin'}"> Admin Only</a></li>
