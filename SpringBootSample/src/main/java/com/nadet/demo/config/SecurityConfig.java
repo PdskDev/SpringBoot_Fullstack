@@ -1,17 +1,27 @@
 package com.nadet.demo.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SuppressWarnings("deprecation")
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
-	/** Set a target out-of-security*/
+	/** Encrypt password*/
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+	
+	/** Set a target out-of-security */
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		//Do not apply security
@@ -45,6 +55,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		//Disable CSRF measures (temporary)
 		http.csrf().disable();
+	}
+	
+	/** Authentication settings */
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		
+		/** Encoder password */
+		PasswordEncoder encoder = passwordEncoder();
+		
+		//In-memory authentication
+		auth
+		   .inMemoryAuthentication()
+		      .withUser("user") // add user
+		         .password(encoder.encode("user"))
+		         .roles("GENERAL")
+		      .and()
+		      .withUser("admin") // add admin
+		         .password(encoder.encode("admin"))
+		         .roles("ADMIN");
+		
 	}
 		
 
